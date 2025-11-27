@@ -19,17 +19,22 @@
     },
     {
       "cStandard": "c11",
-      "compilerPath": "/usr/local/bin/arm-none-eabi-g++",
+      "compilerPath": "/usr/local/bin/arm-none-eabi-gcc",
       "cppStandard": "c++17",
       "defines": [
         "_DEBUG",
         "UNICODE",
-        "_UNICODE"
+        "_UNICODE",
+        "STM32H750xx",
+        "USE_HAL_DRIVER"
       ],
       "includePath": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/libDaisy/**",
-        "${workspaceFolder}/DaisySP/**"
+        "${workspaceFolder}/DaisySP/**",
+        "${workspaceFolder}/libDaisy/Drivers/CMSIS/Device/ST/STM32H7xx/Include",
+        "${workspaceFolder}/libDaisy/Drivers/CMSIS/Include",
+        "${workspaceFolder}/libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc"
       ],
       "name": "macOS"
     }

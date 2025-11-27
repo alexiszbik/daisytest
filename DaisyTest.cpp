@@ -1,34 +1,95 @@
 #include "daisy_seed.h"
+#include "daisysp.h"
 
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
 using namespace daisy;
+using namespace daisysp;
 
 // Declare a DaisySeed object called hardware
-DaisySeed hardware;
+DaisySeed  hardware;
+Oscillator osc;
+AdEnv      env;
+
+MidiUartHandler midi;
+
+Switch button1;
+
+int note = 60;
+
+void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                   AudioHandle::InterleavingOutputBuffer out,
+                   size_t                                size)
+{
+
+    //Fill the block with samples
+    for(size_t i = 0; i < size; i += 2)
+    {
+        //Get the next envelope value
+        //get the next oscillator sample
+        float osc_out = osc.Process();
+
+        //Set the left and right outputs
+        out[i]     = osc_out;
+        out[i + 1] = osc_out;
+    }
+}
+
+
+// Typical Switch case for Message Type.
+void HandleMidiMessage(MidiEvent m)
+{
+    if (m.type == NoteOn) {
+        NoteOnEvent noteOn = m.AsNoteOn();
+        note = noteOn.note;
+        osc.SetFreq(mtof(note));
+    }
+    else if (m.type == NoteOff) {
+        NoteOffEvent noteOff = m.AsNoteOff();
+    } 
+}
+
+void InitMidi()
+{
+    MidiUartHandler::Config midi_config;
+    midi.Init(midi_config);
+}
+
 
 int main(void)
 {
-    // Declare a variable to store the state we want to set for the LED.
-    bool led_state;
-    led_state = true;
-
     // Configure and Initialize the Daisy Seed
     // These are separate to allow reconfiguration of any of the internal
     // components before initialization.
     hardware.Configure();
     hardware.Init();
 
+    InitMidi();
+
+    //How many samples we'll output per second
+    float samplerate = hardware.AudioSampleRate();
+
+    //Set up oscillator
+    osc.Init(samplerate);
+    osc.SetWaveform(osc.WAVE_SIN);
+    osc.SetAmp(1.f);
+    osc.SetFreq(440);
+
+    //Start the adc
+    //hardware.adc.Start();
+
+    //Start calling the audio callback
+    hardware.StartAudio(AudioCallback);
+
     // Loop forever
+    
     for(;;)
     {
-        // Set the onboard LED
-        hardware.SetLed(led_state);
-
-        // Toggle the LED state for the next time around.
-        led_state = !led_state;
-
-        // Wait 500ms
-        System::Delay(500);
-    }
+        midi.Listen();
+        // Handle MIDI Events
+        while(midi.HasEvents())
+        {
+            HandleMidiMessage(midi.PopEvent());
+        }
+    };
 }
