@@ -1,2 +1,5 @@
-# daisytest
-Daisy Test : a simple project to test daisy boards
+# Daisy Test
+
+## Description
+
+This is a basic code to test Daisy board
