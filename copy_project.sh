@@ -32,6 +32,7 @@ rsync -a \
   --exclude='copy_project.sh' \
   --exclude='.gitmodules/' \
   --exclude='DaisySP/' \
+  --exclude='DaisyYMNK/' \
   --exclude='libDaisy/' \
   --exclude='stmlib/' \
   "$SCRIPT_DIR"/ "$DEST_DIR"/
@@ -70,5 +71,11 @@ git submodule add git@github.com:alexiszbik/DaisyYMNK.git DaisyYMNK
 git add .
 git commit -m "First commit"
 
+
+cd libDaisy
+git fetch --tags
+git checkout v5.0.0
+
 # Initialize and update submodules recursively
 git submodule update --init --recursive
+
