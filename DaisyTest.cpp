@@ -1,6 +1,8 @@
 #include "daisy_seed.h"
 #include "daisysp.h"
 
+#include "DaisyYMNK/DaisyYMNK.h"
+
 // Use the daisy namespace to prevent having to type
 // daisy:: before all libdaisy functions
 using namespace daisy;
