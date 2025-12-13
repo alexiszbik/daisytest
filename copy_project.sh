@@ -64,6 +64,7 @@ git init
 git submodule add https://github.com/electro-smith/libDaisy.git libDaisy
 git submodule add https://github.com/electro-smith/DaisySP.git DaisySP
 git submodule add https://github.com/pichenettes/stmlib.git stmlib
+git submodule add git@github.com:alexiszbik/DaisyYMNK.git DaisyYMNK
 
 # Add all files and commit
 git add .
