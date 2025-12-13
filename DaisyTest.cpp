@@ -19,6 +19,8 @@ Switch button1;
 
 int note = 60;
 
+DisplayManager *display = DisplayManager::GetInstance();
+
 void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                    AudioHandle::InterleavingOutputBuffer out,
                    size_t                                size)
@@ -57,7 +59,6 @@ void InitMidi()
     midi.Init(midi_config);
 }
 
-
 int main(void)
 {
     // Configure and Initialize the Daisy Seed
@@ -65,6 +66,8 @@ int main(void)
     // components before initialization.
     hardware.Configure();
     hardware.Init();
+
+    display->Init(&hardware);
 
     InitMidi();
 
@@ -84,6 +87,8 @@ int main(void)
     hardware.StartAudio(AudioCallback);
 
     // Loop forever
+
+    display->WriteNow("Hello", "World", "Of", "Darkness");
     
     for(;;)
     {
